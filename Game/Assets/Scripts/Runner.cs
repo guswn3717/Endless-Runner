@@ -12,14 +12,15 @@ public enum RoadLine
 public class Runner : MonoBehaviour
 {
     [SerializeField] RoadLine roadLine;
+    [SerializeField] Rigidbody rigidBody;
+    [SerializeField] float positionX = 4;
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Awake()
     {
-
+        rigidBody = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         Keyboard();
@@ -42,5 +43,10 @@ public class Runner : MonoBehaviour
                 roadLine++;
             }
         }
+    }
+
+    void Move()
+    {
+        rigidBody.position = new Vector3(positionX * (int)roadLine, 0, 0);
     }
 }
