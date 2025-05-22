@@ -4,17 +4,17 @@ using UnityEngine;
 
 public enum RoadLine
 {
-    LEFT = -1,
+    LEFT   = -1,
     MIDDLE = 0,
-    RIGHT = 1
+    RIGHT  = 1
 }
 
 public class Runner : MonoBehaviour
 {
     [SerializeField] RoadLine roadLine;
     [SerializeField] Rigidbody rigidBody;
-    [SerializeField] float positionX = 4;
 
+    [SerializeField] float positionX = 4;
 
     private void Awake()
     {
@@ -26,9 +26,14 @@ public class Runner : MonoBehaviour
         Keyboard();
     }
 
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
     void Keyboard()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if(Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (roadLine != RoadLine.LEFT)
             {
@@ -36,7 +41,7 @@ public class Runner : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if(Input.GetKeyDown(KeyCode.RightArrow))
         {
             if (roadLine != RoadLine.RIGHT)
             {

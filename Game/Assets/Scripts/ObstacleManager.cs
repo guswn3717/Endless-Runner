@@ -5,42 +5,76 @@ using UnityEngine;
 public class ObstacleManager : MonoBehaviour
 {
     [SerializeField] int random;
-    [SerializeField] int createCount = 5;
-    [SerializeField] List<GameObject> obstacles;
-    [SerializeField] GameObject[] prefab;
-    [SerializeField] Transform[] transforms;
 
-    // Start is called before the first frame update
+    [SerializeField] int createCount = 5;
+
+    [SerializeField] List<GameObject> obstacles;
+
+    [SerializeField] string [ ] obstacleNames;
+
+    [SerializeField] Transform [ ] transforms;
+
     void Start()
     {
+        obstacles.Capacity = 10;
+
         Create();
 
-        StartCoroutine(ActivateObstacle());
+        StartCoroutine(ActiveObstacle());
     }
-
+  
     public void Create()
     {
-        for (int i = 0; i < createCount; i++)
+        for(int i = 0; i < createCount; i++)
         {
-            GameObject clone = Instantiate(prefab[Random.Range(0, prefab.Length)], transform);
+            GameObject clone = Instantiate(Resources.Load<GameObject>(obstacleNames[Random.Range(0, obstacleNames.Length)]), transform);
+
+            clone.name = clone.name.Replace("(Clone)", "");
 
             clone.SetActive(false);
 
             obstacles.Add(clone);
         }
     }
-    
-    public IEnumerator ActivateObstacle()
+
+    bool ExamineActive()
     {
-        while (true)
+        for(int i = 0; i < obstacles.Count; i++)
+        {
+            if (obstacles[i].activeSelf == false)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public IEnumerator ActiveObstacle()
+    {
+        while(true)
         {
             random = Random.Range(0, obstacles.Count);
 
-            // í˜„ìž¬ ê²Œìž„ ì˜¤ë¸Œì íŠ¸ê°€ í™œì„±í™”ë˜ì–´ ìžˆëŠ” ì§€ í™•ì¸í•œë‹¤ë‹¤
+            // ÇöÀç °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖ´Â Áö È®ÀÎÇÕ´Ï´Ù.
             while (obstacles[random].activeSelf == true)
             {
-                //í˜„ì œ ì¸ë±ìŠ¤ì— ìžˆëŠ” ê²Œìž„ ì˜¤ë¸Œì íŠ¸ê°€ í™œì„±í™”ë˜ì–´ ìžˆìœ¼ë©´
-                //random ë³€ìˆ˜ì˜ ê°’ì„ +1ì„ í•´ì„œ ë‹¤ì‹œ ê²€ìƒ‰í•œë‹¤
+                // ÇöÀç ¸®½ºÆ®¿¡ ÀÖ´Â ¸ðµç °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖ´Â Áö È®ÀÎÇÕ´Ï´Ù.
+                if(ExamineActive())
+                {
+                    // ¸ðµç °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖ´Ù¸é °ÔÀÓ ¿ÀºêÁ§Æ®¸¦ »õ·Î
+                    // »ý¼ºÇÑ ´ÙÀ½ obstacles ¸®½ºÆ®¿¡ ³Ö¾îÁÝ´Ï´Ù.
+                    GameObject clone = Instantiate(Resources.Load<GameObject>(obstacleNames[Random.Range(0, obstacleNames.Length)]), transform);
+
+                    clone.name = clone.name.Replace("(Clone)", "");
+
+                    clone.SetActive(false);
+
+                    obstacles.Add(clone);
+                }
+
+                // ÇöÀç ÀÎµ¦½º¿¡ ÀÖ´Â °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖÀ¸¸é
+                // random º¯¼öÀÇ °ªÀ» +1À» ÇØ¼­ ´Ù½Ã °Ë»öÇÕ´Ï´Ù.
                 random = (random + 1) % obstacles.Count;
             }
 
@@ -51,4 +85,5 @@ public class ObstacleManager : MonoBehaviour
             yield return new WaitForSeconds(5);
         }
     }
+
 }
