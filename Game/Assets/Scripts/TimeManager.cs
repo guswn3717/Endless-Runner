@@ -22,9 +22,7 @@ public class TimeManager : MonoBehaviour
     {
         while (true)
         {
-
             time += Time.deltaTime;
-            Debug.Log(time);
 
             minute = (int)time / 60;
             second = (int)time % 60;

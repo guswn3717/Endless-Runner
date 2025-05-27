@@ -14,8 +14,6 @@ public class ObstacleManager : MonoBehaviour
 
     [SerializeField] Transform [ ] transforms;
 
-    [SerializeField] WaitForSeconds waitForSeconds = new WaitForSeconds(5);
-
     void Start()
     {
         obstacles.Capacity = 10;
@@ -58,14 +56,14 @@ public class ObstacleManager : MonoBehaviour
         {
             random = Random.Range(0, obstacles.Count);
 
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ç¾ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ È®ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+            // ÇöÀç °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖ´Â Áö È®ÀÎÇÕ´Ï´Ù.
             while (obstacles[random].activeSelf == true)
             {
-                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿? ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ç¾ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ È®ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+                // ÇöÀç ¸®½ºÆ®¿¡ ÀÖ´Â ¸ðµç °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖ´Â Áö È®ÀÎÇÕ´Ï´Ù.
                 if(ExamineActive())
                 {
-                    // ï¿½ï¿½ï¿? ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ç¾ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ obstacles ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½Ý´Ï´ï¿½.
+                    // ¸ðµç °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖ´Ù¸é °ÔÀÓ ¿ÀºêÁ§Æ®¸¦ »õ·Î
+                    // »ý¼ºÇÑ ´ÙÀ½ obstacles ¸®½ºÆ®¿¡ ³Ö¾îÁÝ´Ï´Ù.
                     GameObject clone = Instantiate(Resources.Load<GameObject>(obstacleNames[Random.Range(0, obstacleNames.Length)]), transform);
 
                     clone.name = clone.name.Replace("(Clone)", "");
@@ -75,8 +73,8 @@ public class ObstacleManager : MonoBehaviour
                     obstacles.Add(clone);
                 }
 
-                // ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-                // random ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ +1ï¿½ï¿½ ï¿½Ø¼ï¿½ ï¿½Ù½ï¿½ ï¿½Ë»ï¿½ï¿½Õ´Ï´ï¿½.
+                // ÇöÀç ÀÎµ¦½º¿¡ ÀÖ´Â °ÔÀÓ ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÇ¾î ÀÖÀ¸¸é
+                // random º¯¼öÀÇ °ªÀ» +1À» ÇØ¼­ ´Ù½Ã °Ë»öÇÕ´Ï´Ù.
                 random = (random + 1) % obstacles.Count;
             }
 
@@ -84,7 +82,7 @@ public class ObstacleManager : MonoBehaviour
 
             obstacles[random].SetActive(true);
 
-            yield return CoroutineCache.WaitForSecond(0.5f);
+            yield return CoroutineCache.WaitForSecond(5.0f);
         }
     }
 
