@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,16 +15,26 @@ public class Runner : MonoBehaviour
     [SerializeField] RoadLine roadLine;
     [SerializeField] Rigidbody rigidBody;
 
+    [SerializeField] Animator animator;
     [SerializeField] float positionX = 4;
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
         rigidBody = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    private void OnEnable()
     {
-        Keyboard();
+        State.Subscribe(Condition.FINISH, Die);
+
+        State.Subscribe(Condition.START, InputSystem);
+        State.Subscribe(Condition.START, StateTransition);
+    }
+
+    public void InputSystem()
+    {
+        StartCoroutine(Coroutine());
     }
 
     private void FixedUpdate()
@@ -31,22 +42,31 @@ public class Runner : MonoBehaviour
         Move();
     }
 
-    void Keyboard()
+    IEnumerator Coroutine()
     {
-        if(Input.GetKeyDown(KeyCode.LeftArrow))
+        while (true)
         {
-            if (roadLine != RoadLine.LEFT)
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                roadLine--;
-            }
-        }
+                if (roadLine != RoadLine.LEFT)
+                {
+                    roadLine--;
 
-        if(Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            if (roadLine != RoadLine.RIGHT)
-            {
-                roadLine++;
+                    animator.Play("Left Avoid");
+                }
             }
+
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                if (roadLine != RoadLine.RIGHT)
+                {
+                    roadLine++;
+
+                    animator.Play("Right Avoid");
+                }
+            }
+
+            yield return null;
         }
     }
 
@@ -58,5 +78,33 @@ public class Runner : MonoBehaviour
             new Vector3(positionX * (int)roadLine, 0, 0),
             SpeedManager.Instance.Speed * Time.deltaTime
         );
+    }
+
+    void Die()
+    {
+        animator.Play("Die");
+    }
+
+    public void StateTransition()
+    {
+        animator.SetTrigger("Start");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Obstacle obstacle = other.GetComponent<Obstacle>();
+
+        if(obstacle != null)
+        {
+            State.Publish(Condition.FINISH);
+        }
+    }
+
+    private void OnDisable()
+    {
+        State.Unsubscribe(Condition.FINISH, Die);
+
+        State.Unsubscribe(Condition.START, InputSystem);
+        State.Unsubscribe(Condition.START, StateTransition);
     }
 }
