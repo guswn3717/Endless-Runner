@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 
 public class RoadManager : MonoBehaviour
@@ -11,11 +10,17 @@ public class RoadManager : MonoBehaviour
     private void OnEnable()
     {
         State.Subscribe(Condition.START, Execute);
+        State.Subscribe(Condition.FINISH, Release);
     }
 
     void Execute()
     {
         StartCoroutine(Coroutine());
+    }
+
+    void Release()
+    {
+        StopAllCoroutines();
     }
 
     IEnumerator Coroutine()
@@ -47,5 +52,6 @@ public class RoadManager : MonoBehaviour
     private void OnDisable()
     {
         State.Unsubscribe(Condition.START, Execute);
+        State.Unsubscribe(Condition.FINISH, Release);
     }
 }
