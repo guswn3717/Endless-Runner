@@ -19,10 +19,6 @@ public class GameManager : MonoBehaviour
     public void Execute()
     {
         State.Publish(Condition.START);
-
-        AudioManager.Instance.ScenerySound("Execute");
-
-        AudioManager.Instance.Listener("Enter Button");
     }
 
     public void Resume()
